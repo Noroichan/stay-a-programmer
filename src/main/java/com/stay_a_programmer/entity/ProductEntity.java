@@ -14,11 +14,11 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Column(nullable = false, updatable = false)
-    private Long price;
+    private Integer price;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
