@@ -2,7 +2,6 @@ package com.stay_a_programmer.entity;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.util.Date;
