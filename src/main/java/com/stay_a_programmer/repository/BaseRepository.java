@@ -10,11 +10,11 @@ import java.util.Optional;
 
 @NoRepositoryBean
 public interface BaseRepository<T> extends JpaRepository<T, Long> {
-    @Query("SELECT * FROM #{#entityName} WHERE is_deleted = false")
+    @Query("SELECT e FROM #{#entityName} e WHERE e.isDeleted = false")
     @Override
     List<T> findAll();
 
-    @Query("SELECT * FROM #{#entityName} WHERE is_deleted = false AND id = :id")
+    @Query("SELECT e FROM #{#entityName} e WHERE e.isDeleted = false AND e.id = :id")
     @Override
     Optional<T> findById(@Param("id") Long id);
 }
