@@ -1,6 +1,7 @@
 package com.stay_a_programmer.service;
 
 import com.stay_a_programmer.entity.ProductEntity;
+import com.stay_a_programmer.exception.NotFoundException;
 import com.stay_a_programmer.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,6 @@ public class ProductService {
     }
 
     public ProductEntity getById(Long id) {
-        return productRepository.findById(id).orElse(null); // throw error later
+        return productRepository.findById(id).orElseThrow(() -> new NotFoundException("PRODUCT_NOT_FOUND"));
     }
 }
