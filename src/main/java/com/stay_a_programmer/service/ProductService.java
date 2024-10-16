@@ -1,5 +1,6 @@
 package com.stay_a_programmer.service;
 
+import com.stay_a_programmer.dto.ProductDTO;
 import com.stay_a_programmer.entity.ProductEntity;
 import com.stay_a_programmer.exception.NotFoundException;
 import com.stay_a_programmer.repository.ProductRepository;
@@ -16,11 +17,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductEntity> list() {
-        return productRepository.findAll();
+    public List<ProductDTO> list() {
+        return productRepository.findAll().stream().map(ProductEntity::mapToDTO).toList();
     }
 
-    public ProductEntity getById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new NotFoundException("PRODUCT_NOT_FOUND"));
+    public ProductDTO getById(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new NotFoundException("PRODUCT_NOT_FOUND")).mapToDTO();
     }
 }
