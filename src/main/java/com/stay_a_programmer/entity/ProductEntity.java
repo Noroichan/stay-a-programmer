@@ -31,6 +31,17 @@ public class ProductEntity {
     @Column(name = "is_deleted", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isDeleted;
 
+    public ProductEntity() {}
+
+    public ProductEntity(Long id, String name, Integer price, Date createdAt, Date modifiedAt, Boolean isDeleted) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.isDeleted = isDeleted;
+    }
+
     public Long getId() {
         return id;
     }
