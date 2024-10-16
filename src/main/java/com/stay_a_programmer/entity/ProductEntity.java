@@ -1,5 +1,6 @@
 package com.stay_a_programmer.entity;
 
+import com.stay_a_programmer.dto.ProductDTO;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -52,5 +53,9 @@ public class ProductEntity {
 
     public Boolean getDeleted() {
         return isDeleted;
+    }
+
+    public ProductDTO mapToDTO () {
+        return new ProductDTO(this.id, this.name, this.price);
     }
 }

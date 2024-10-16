@@ -1,6 +1,6 @@
 package com.stay_a_programmer.controller;
 
-import com.stay_a_programmer.entity.ProductEntity;
+import com.stay_a_programmer.dto.ProductDTO;
 import com.stay_a_programmer.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +20,12 @@ public class ProductController extends BaseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductEntity>> list() {
+    public ResponseEntity<List<ProductDTO>> list() {
         return ResponseEntity.ok(this.productService.list());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductEntity> getById(@PathVariable Long id) {
+    public ResponseEntity<ProductDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(this.productService.getById(id));
     }
 }
