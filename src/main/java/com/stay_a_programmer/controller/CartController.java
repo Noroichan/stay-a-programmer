@@ -1,53 +1,50 @@
 package com.stay_a_programmer.controller;
 
+import com.stay_a_programmer.dto.CartItemDTO;
+import com.stay_a_programmer.dto.CartItemModificationDTO;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
 public class CartController {
-    // TODO add response type
     @GetMapping("/view")
-    public ResponseEntity<?> viewCart(@CookieValue(value = "cartId") long cartId, HttpServletResponse response) {
+    public ResponseEntity<List<CartItemDTO>> viewCart(@CookieValue(value = "cartId") long cartId, HttpServletResponse response) {
         // TODO implement
         return null;
     }
 
-    // TODO add response type
     @PostMapping("/addItem")
-    public ResponseEntity<?> addItem(
+    public ResponseEntity<CartItemDTO> addItem(
             @CookieValue(value = "cartId") long cartId,
-            // TODO add dto
-            @RequestBody Object item,
+            @Valid @RequestBody CartItemModificationDTO newItem,
             HttpServletResponse response
     ) {
         // TODO implement
         return null;
     }
 
-    // TODO add response type
-    @PutMapping("/removeItem/{id}")
-    public ResponseEntity<?> removeItem(@CookieValue(value = "cartId") long cartId, @PathVariable long id) {
-        // TODO implement
-        return null;
-    }
-
-    // TODO add response type
-    @PutMapping("/modifyItem/{id}")
-    public ResponseEntity<?> modifyItem(
+    @PutMapping("/modifyItem")
+    public ResponseEntity<CartItemDTO> modifyItem(
             @CookieValue(value = "cartId") long cartId,
-            @PathVariable long id,
-            // TODO add dto
-            @RequestBody Object modifiedItem
+            @Valid @RequestBody CartItemModificationDTO modificationItem
     ) {
         // TODO implement
         return null;
     }
 
-    // TODO add response type
+    @PutMapping("/removeItem/{id}")
+    public ResponseEntity<String> removeItem(@CookieValue(value = "cartId") long cartId, @PathVariable long id) {
+        // TODO implement
+        return null;
+    }
+
     @PostMapping("/checkout")
-    public ResponseEntity<?> checkout(@CookieValue(value = "id") long id, HttpServletResponse response) {
+    public ResponseEntity<String> checkout(@CookieValue(value = "id") long id, HttpServletResponse response) {
         // TODO implement
         return null;
     }
