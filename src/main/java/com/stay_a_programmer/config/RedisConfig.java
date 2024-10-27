@@ -1,6 +1,5 @@
 package com.stay_a_programmer.config;
 
-import com.stay_a_programmer.dto.CartItemDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -20,8 +19,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, List<CartItemDTO>> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, List<CartItemDTO>> template = new RedisTemplate<>();
+    public RedisTemplate<String, List<String>> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, List<String>> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         return template;
     }
