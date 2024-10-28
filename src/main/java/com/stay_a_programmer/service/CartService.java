@@ -1,6 +1,5 @@
 package com.stay_a_programmer.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.stay_a_programmer.dto.CartItemDTO;
 import com.stay_a_programmer.dto.CartItemModificationDTO;
 import com.stay_a_programmer.dto.ProductDTO;

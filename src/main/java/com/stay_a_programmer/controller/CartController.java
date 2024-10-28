@@ -1,10 +1,10 @@
 package com.stay_a_programmer.controller;
 
+import com.stay_a_programmer.config.CookieConfig;
 import com.stay_a_programmer.dto.CartItemDTO;
 import com.stay_a_programmer.dto.CartItemModificationDTO;
 import com.stay_a_programmer.service.CartService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,9 +19,11 @@ import java.util.UUID;
 public class CartController extends BaseController {
 
     private CartService cartService;
+    private CookieConfig cookieConfig;
 
-    public CartController(CartService cartService) {
+    public CartController(CartService cartService, CookieConfig cookieConfig) {
         this.cartService = cartService;
+        this.cookieConfig = cookieConfig;
     }
 
     @GetMapping("/view")
@@ -42,7 +44,7 @@ public class CartController extends BaseController {
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             cookie.setPath("/");
-            cookie.setMaxAge(60 * 60 * 24); // TODO environment variables
+            cookie.setMaxAge(cookieConfig.maxAge());
 
             response.addCookie(cookie);
         }
