@@ -9,3 +9,12 @@ spring:
 
     hikari:
       connection-timeout: 10000
+
+  redis:
+    host: localhost
+    port: 6397
+    password: LetMeIn
+
+config:
+  cookie:
+    max-age: 86400
