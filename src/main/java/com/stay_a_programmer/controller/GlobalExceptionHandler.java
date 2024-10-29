@@ -1,5 +1,6 @@
 package com.stay_a_programmer.controller;
 
+import com.stay_a_programmer.exception.JokeException;
 import com.stay_a_programmer.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,5 +19,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleMissingCookie(MissingRequestCookieException missingRequestCookieException) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(missingRequestCookieException.getCookieName() + " cookie is required!");
+    }
+
+    @ExceptionHandler(JokeException.class)
+    public ResponseEntity<String> handleJokeException(JokeException jokeException) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(jokeException.getMessage());
     }
 }
