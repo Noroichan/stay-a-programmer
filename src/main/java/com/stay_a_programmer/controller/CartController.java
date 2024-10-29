@@ -68,7 +68,13 @@ public class CartController extends BaseController {
 
     @PostMapping("/checkout")
     public ResponseEntity<String> checkout(@CookieValue("cartId") String cartId, HttpServletResponse response) {
-        // TODO implement
-        return null;
+        String checkoutMessage = cartService.checkout(cartId);
+
+        Cookie cookie = new Cookie("cartId", "");
+        cookie.setPath("/");
+        cookie.setMaxAge(cookieConfig.maxAge());
+
+        response.addCookie(cookie);
+        return ResponseEntity.ok(checkoutMessage);
     }
 }

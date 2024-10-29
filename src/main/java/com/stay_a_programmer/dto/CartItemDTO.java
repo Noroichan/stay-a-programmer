@@ -39,4 +39,9 @@ public class CartItemDTO {
         if (!(obj instanceof CartItemDTO)) return false;
         return this.getId() == ((CartItemDTO) obj).getId();
     }
+
+    @Override
+    public String toString() {
+        return name + " (" + price + "€): " + amount;
+    }
 }

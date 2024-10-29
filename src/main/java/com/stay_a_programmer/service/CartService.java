@@ -15,14 +15,16 @@ import java.util.List;
 @Service
 public class CartService {
 
-    private RedisTemplate<String, List<String>> redis;
-    private ProductRepository productRepository;
-    private CartItemListJsonMapper jsonMapper;
+    private final RedisTemplate<String, List<String>> redis;
+    private final ProductRepository productRepository;
+    private final CartItemListJsonMapper jsonMapper;
+    private final JokeService jokeService;
 
-    public CartService(RedisTemplate<String, List<String>> redis, ProductRepository productRepository, CartItemListJsonMapper jsonMapper) {
-        this.redis = redis;
-        this.productRepository = productRepository;
+    public CartService(JokeService jokeService, CartItemListJsonMapper jsonMapper, ProductRepository productRepository, RedisTemplate<String, List<String>> redis) {
+        this.jokeService = jokeService;
         this.jsonMapper = jsonMapper;
+        this.productRepository = productRepository;
+        this.redis = redis;
     }
 
     public List<CartItemDTO> getCart(String id) {
@@ -110,5 +112,30 @@ public class CartService {
         } else {
             throw new NotFoundException("CART_ITEM_NOT_FOUND");
         }
+    }
+
+    public String checkout(String cartId) {
+        List<String> cartJson = redis.opsForValue().get(cartId);
+
+        if (cartJson == null) {
+            throw new NotFoundException("CART_NOT_FOUND");
+        }
+
+        if (cartJson.isEmpty()) {
+            throw new NotFoundException("NO_ITEM_WAS_FOUND");
+        }
+
+        List<CartItemDTO> cart = jsonMapper.toObjectList(cartJson);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        cart.forEach(item -> {
+            stringBuilder.append(item.toString()).append("\n");
+        });
+
+        stringBuilder.append("Jokes on you no paying implemented: ").append(jokeService.getJoke());
+
+        redis.opsForValue().getAndDelete(cartId);
+
+        return stringBuilder.toString();
     }
 }
