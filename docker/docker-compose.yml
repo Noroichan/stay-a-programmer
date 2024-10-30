@@ -1,0 +1,33 @@
+version: '3'
+
+networks:
+  default:
+
+services:
+  pgsql-db:
+    image: postgres:14.1-alpine
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgsql_data_volume:/data/db
+    networks:
+      - default
+    hostname: postgresql
+    environment:
+      POSTGRES_PASSWORD: LetMeIn
+      POSTGRES_USER: root
+      POSTGRES_DB: shop_db
+
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: [ 'CMD', 'redis-cli', 'ping' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: '--requirepass LetMeIn'
+
+volumes:
+  pgsql_data_volume:
