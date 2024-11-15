@@ -2,13 +2,14 @@ spring:
   application:
     name: 'stay-a-programmer'
 
+  servlet:
+    context-path: '/api'
+
   datasource:
     url: 'jdbc:postgresql://localhost:5432/shop_db'
     username: root
     password: LetMeIn
-
-    hikari:
-      connection-timeout: 10000
+    driver-class: org.postgresql.Driver
 
   redis:
     host: localhost
