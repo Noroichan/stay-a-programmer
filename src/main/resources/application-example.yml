@@ -2,9 +2,6 @@ spring:
   application:
     name: 'stay-a-programmer'
 
-  servlet:
-    context-path: '/api'
-
   datasource:
     url: 'jdbc:postgresql://localhost:5432/shop_db'
     username: root
@@ -15,6 +12,10 @@ spring:
     host: localhost
     port: 6397
     password: LetMeIn
+
+server:
+  servlet:
+    context-path: '/api'
 
 config:
   cookie:
