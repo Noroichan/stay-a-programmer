@@ -1,9 +1,9 @@
 package com.stay_a_programmer.service;
 
+import com.stay_a_programmer.dao.ProductDao;
 import com.stay_a_programmer.dto.ProductDTO;
 import com.stay_a_programmer.entity.ProductEntity;
 import com.stay_a_programmer.exception.NotFoundException;
-import com.stay_a_programmer.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,11 +16,10 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public class ProductServiceTests {
     @Mock
-    private ProductRepository productRepository;
+    private ProductDao productDao;
 
     @InjectMocks
     private ProductService productService;
@@ -44,7 +43,7 @@ public class ProductServiceTests {
 
     @Test
     public void testListing() {
-        Mockito.when(this.productRepository.findAll()).thenReturn(productEntities);
+        Mockito.when(this.productDao.findAll()).thenReturn(productEntities);
 
         var products = this.productService.list();
 
@@ -61,7 +60,7 @@ public class ProductServiceTests {
     public void testGetById() {
         long id = 1;
 
-        Mockito.when(this.productRepository.findById(id)).thenReturn(Optional.of(productEntities.getFirst()));
+        Mockito.when(this.productDao.findById(id)).thenReturn(productEntities.getFirst());
 
         var product = this.productService.getById(id);
 
@@ -73,7 +72,7 @@ public class ProductServiceTests {
     public void testGetByIdWithNotFound() {
         long id = 4;
 
-        Mockito.when(this.productRepository.findById(id)).thenReturn(Optional.empty());
+        Mockito.when(this.productDao.findById(id)).thenReturn(null);
 
         Assertions.assertThatThrownBy(() -> this.productService.getById(id))
                 .isInstanceOf(NotFoundException.class)

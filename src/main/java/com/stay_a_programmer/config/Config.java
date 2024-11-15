@@ -13,4 +13,21 @@ public class Config {
     public CookieConfig cookieConfig() {
         return new CookieConfig(this.cookieMaxAge);
     }
+
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
+
+    @Value("${spring.datasource.driver-class}")
+    private String dbDriver;
+
+    @Value("${spring.datasource.username}")
+    private String dbUser;
+
+    @Value("${spring.datasource.password}")
+    private String dbPassword;
+
+    @Bean
+    public PostgresConfig postgresConfig() {
+        return new PostgresConfig(dbUrl, dbDriver, dbUser, dbPassword);
+    }
 }

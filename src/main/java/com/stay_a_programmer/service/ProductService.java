@@ -1,9 +1,9 @@
 package com.stay_a_programmer.service;
 
+import com.stay_a_programmer.dao.ProductDao;
 import com.stay_a_programmer.dto.ProductDTO;
 import com.stay_a_programmer.entity.ProductEntity;
 import com.stay_a_programmer.exception.NotFoundException;
-import com.stay_a_programmer.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,17 +11,23 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private ProductRepository productRepository;
+    private final ProductDao productDao;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(ProductDao productDao) {
+        this.productDao = productDao;
     }
 
     public List<ProductDTO> list() {
-        return productRepository.findAll().stream().map(ProductEntity::mapToDTO).toList();
+        return productDao.findAll().stream().map(ProductEntity::mapToDTO).toList();
     }
 
     public ProductDTO getById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new NotFoundException("PRODUCT_NOT_FOUND")).mapToDTO();
+        ProductEntity productEntity = productDao.findById(id);
+
+        if (productEntity == null) {
+            throw new NotFoundException("PRODUCT_NOT_FOUND");
+        }
+
+        return productEntity.mapToDTO();
     }
 }

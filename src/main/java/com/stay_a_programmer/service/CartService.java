@@ -1,11 +1,12 @@
 package com.stay_a_programmer.service;
 
+import com.stay_a_programmer.dao.ProductDao;
 import com.stay_a_programmer.dto.CartItemDTO;
 import com.stay_a_programmer.dto.CartItemModificationDTO;
 import com.stay_a_programmer.dto.ProductDTO;
+import com.stay_a_programmer.entity.ProductEntity;
 import com.stay_a_programmer.exception.NotFoundException;
 import com.stay_a_programmer.mapper.CartItemListJsonMapper;
-import com.stay_a_programmer.repository.ProductRepository;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +17,14 @@ import java.util.List;
 public class CartService {
 
     private final RedisTemplate<String, List<String>> redis;
-    private final ProductRepository productRepository;
+    private final ProductDao productDao;
     private final CartItemListJsonMapper jsonMapper;
     private final JokeService jokeService;
 
-    public CartService(JokeService jokeService, CartItemListJsonMapper jsonMapper, ProductRepository productRepository, RedisTemplate<String, List<String>> redis) {
+    public CartService(JokeService jokeService, CartItemListJsonMapper jsonMapper, ProductDao productDao, RedisTemplate<String, List<String>> redis) {
         this.jokeService = jokeService;
         this.jsonMapper = jsonMapper;
-        this.productRepository = productRepository;
+        this.productDao = productDao;
         this.redis = redis;
     }
 
@@ -38,9 +39,13 @@ public class CartService {
     }
 
     public CartItemDTO addItem(String id, CartItemModificationDTO newItem) {
-        ProductDTO productDTO = this.productRepository.findById(newItem.id())
-                .orElseThrow(() -> new NotFoundException("PRODUCT_NOT_FOUND"))
-                .mapToDTO();
+        ProductEntity productEntity = this.productDao.findById(newItem.id());
+
+        if (productEntity == null) {
+            throw new NotFoundException("PRODUCT_NOT_FOUND");
+        }
+
+        ProductDTO productDTO = productEntity.mapToDTO();
 
         List<String> cartJson = redis.opsForValue().get(id);
 
@@ -66,9 +71,13 @@ public class CartService {
     }
 
     public CartItemDTO modifyItem(String id, CartItemModificationDTO modificationItem) {
-        ProductDTO productDTO = this.productRepository.findById(modificationItem.id())
-                .orElseThrow(() -> new NotFoundException("PRODUCT_NOT_FOUND"))
-                .mapToDTO();
+        ProductEntity productEntity = this.productDao.findById(modificationItem.id());
+
+        if (productEntity == null) {
+            throw new NotFoundException("PRODUCT_NOT_FOUND");
+        }
+
+        ProductDTO productDTO = productEntity.mapToDTO();
 
         List<String> cartJson = redis.opsForValue().get(id);
 
