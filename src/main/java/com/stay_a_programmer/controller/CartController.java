@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/cart")
-public class CartController extends BaseController {
+public class CartController {
 
     private CartService cartService;
     private CookieConfig cookieConfig;

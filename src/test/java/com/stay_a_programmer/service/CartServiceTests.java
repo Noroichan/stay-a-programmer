@@ -1,13 +1,12 @@
 package com.stay_a_programmer.service;
 
+import com.stay_a_programmer.dao.ProductDao;
 import com.stay_a_programmer.dto.CartItemDTO;
 import com.stay_a_programmer.dto.CartItemModificationDTO;
 import com.stay_a_programmer.entity.ProductEntity;
 import com.stay_a_programmer.exception.NotFoundException;
 import com.stay_a_programmer.mapper.CartItemListJsonMapper;
-import com.stay_a_programmer.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,18 +17,16 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public class CartServiceTests {
     @Mock
     private RedisTemplate<String, List<String>> redis;
 
     @Mock
-    private ProductRepository productRepository;
+    private ProductDao productDao;
 
     @Mock
     private CartItemListJsonMapper jsonMapper;
@@ -44,7 +41,7 @@ public class CartServiceTests {
 
     private static List<String> cart;
 
-    private static ValueOperations valueOperations;
+    private ValueOperations valueOperations;
 
     @BeforeAll
     public static void beforeAll() {
@@ -56,12 +53,12 @@ public class CartServiceTests {
 
         cart = new ArrayList<>();
 
-        valueOperations = Mockito.mock(ValueOperations.class);
     }
 
     @BeforeEach
     public void beforeEach() {
         MockitoAnnotations.openMocks(this);
+        valueOperations = Mockito.mock(ValueOperations.class);
         Mockito.when(this.redis.opsForValue()).thenReturn(valueOperations);
     }
 
@@ -96,7 +93,7 @@ public class CartServiceTests {
         int amount = 1;
         CartItemModificationDTO newItem = new CartItemModificationDTO(productId, amount);
 
-        Mockito.when(this.productRepository.findById(productId)).thenReturn(Optional.of(productEntities.getFirst()));
+        Mockito.when(this.productDao.findById(productId)).thenReturn(productEntities.getFirst());
         Mockito.when(valueOperations.get(cartId)).thenReturn(cart);
 
         var item = this.cartService.addItem(cartId, newItem);
@@ -114,7 +111,7 @@ public class CartServiceTests {
         int amount = 1;
         CartItemModificationDTO newItem = new CartItemModificationDTO(productId, amount);
 
-        Mockito.when(this.productRepository.findById(productId)).thenReturn(Optional.of(productEntities.getFirst()));
+        Mockito.when(this.productDao.findById(productId)).thenReturn(productEntities.getFirst());
         Mockito.when(valueOperations.get(cartId)).thenReturn(null);
 
         var item = this.cartService.addItem(cartId, newItem);
@@ -133,7 +130,7 @@ public class CartServiceTests {
         CartItemModificationDTO newItem = new CartItemModificationDTO(productId, amount);
         ProductEntity firstProduct = productEntities.getFirst();
 
-        Mockito.when(this.productRepository.findById(productId)).thenReturn(Optional.of(firstProduct));
+        Mockito.when(this.productDao.findById(productId)).thenReturn(firstProduct);
         Mockito.when(valueOperations.get(cartId)).thenReturn(cart);
         Mockito.when(jsonMapper.toObjectList(cart)).thenReturn(
                 new ArrayList<>(){{
@@ -156,7 +153,7 @@ public class CartServiceTests {
         int amount = 1;
         CartItemModificationDTO newItem = new CartItemModificationDTO(productId, amount);
 
-        Mockito.when(this.productRepository.findById(productId)).thenReturn(Optional.empty());
+        Mockito.when(this.productDao.findById(productId)).thenReturn(null);
 
         Assertions.assertThatThrownBy(() -> this.cartService.addItem(cartId, newItem))
                 .isInstanceOf(NotFoundException.class)
@@ -171,7 +168,7 @@ public class CartServiceTests {
         CartItemModificationDTO modifyItem = new CartItemModificationDTO(productId, amount);
         ProductEntity firstProduct = productEntities.getFirst();
 
-        Mockito.when(this.productRepository.findById(productId)).thenReturn(Optional.of(firstProduct));
+        Mockito.when(this.productDao.findById(productId)).thenReturn(firstProduct);
         Mockito.when(valueOperations.get(cartId)).thenReturn(cart);
         Mockito.when(jsonMapper.toObjectList(cart)).thenReturn(
                 new ArrayList<>(){{
@@ -194,7 +191,7 @@ public class CartServiceTests {
         int amount = 1;
         CartItemModificationDTO newItem = new CartItemModificationDTO(productId, amount);
 
-        Mockito.when(this.productRepository.findById(productId)).thenReturn(Optional.empty());
+        Mockito.when(this.productDao.findById(productId)).thenReturn(null);
 
         Assertions.assertThatThrownBy(() -> this.cartService.modifyItem(cartId, newItem))
                 .isInstanceOf(NotFoundException.class)
@@ -208,7 +205,7 @@ public class CartServiceTests {
         int amount = 1;
         CartItemModificationDTO newItem = new CartItemModificationDTO(productId, amount);
 
-        Mockito.when(this.productRepository.findById(productId)).thenReturn(Optional.of(productEntities.getFirst()));
+        Mockito.when(this.productDao.findById(productId)).thenReturn(productEntities.getFirst());
         Mockito.when(valueOperations.get(cartId)).thenReturn(null);
 
         Assertions.assertThatThrownBy(() -> this.cartService.modifyItem(cartId, newItem))
@@ -223,7 +220,7 @@ public class CartServiceTests {
         int amount = 1;
         CartItemModificationDTO newItem = new CartItemModificationDTO(productId, amount);
 
-        Mockito.when(this.productRepository.findById(productId)).thenReturn(Optional.of(productEntities.getFirst()));
+        Mockito.when(this.productDao.findById(productId)).thenReturn(productEntities.getFirst());
         Mockito.when(valueOperations.get(cartId)).thenReturn(cart);
         Mockito.when(jsonMapper.toObjectList(cart)).thenReturn(new ArrayList<>());
 
